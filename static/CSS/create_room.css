@@ -1,0 +1,36 @@
+/* Estilização do formulário */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+.password-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.password-wrapper input[type="password"] {
+    flex: 1;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.password-wrapper button {
+    padding: 10px;
+    background-color: #0044cc;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.password-wrapper button:hover {
+    background-color: #003399;
+}
+
+#error-message {
+    margin-top: -10px;
+    margin-bottom: 15px;
+}

@@ -1,0 +1,151 @@
+/* Reset básico e estilização do corpo */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+/* Header */
+header {
+    background-color: #0044cc;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2rem;
+}
+
+/* Container principal */
+.container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Seções */
+.rooms-section, .books-section {
+    margin-bottom: 30px;
+}
+
+h2 {
+    color: #0044cc;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+h3 {
+    color: #333;
+    border-bottom: 2px solid #0044cc;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+/* Lista de Salas */
+.rooms-section ul {
+    padding: 0;
+    list-style-type: none;
+}
+
+.rooms-section ul li {
+    margin-bottom: 10px;
+}
+
+.rooms-section .room-link {
+    display: block;
+    padding: 10px;
+    background-color: #e9ecef;
+    border-radius: 5px;
+    color: #333;
+    text-decoration: none;
+    font-size: 1.1rem; /* Ajusta o tamanho da fonte */
+    overflow: hidden; /* Garante que o texto não ultrapasse o contêiner */
+    text-overflow: ellipsis; /* Adiciona "..." se o texto for muito longo */
+    white-space: nowrap; /* Impede que o texto quebre em várias linhas */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Adiciona sombra para destaque */
+}
+
+.rooms-section .room-link:hover {
+    background-color: #d6d6d6;
+    color: #0044cc;
+}
+
+/* Lista de Livros */
+.books-section ul {
+    padding: 0;
+    list-style-type: none;
+}
+
+.books-section ul li {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+
+.book-item {
+    display: flex;
+    align-items: flex-start;
+}
+
+.book-image {
+    margin-right: 20px;
+}
+
+.book-image img {
+    width: 100px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.book-details {
+    flex: 1;
+}
+
+.book-details h4 {
+    color: #222;
+    margin: 5px 0;
+}
+
+.book-details p {
+    color: #555;
+    margin: 5px 0;
+}
+
+/* Link para criar sala */
+.create-room-link {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 15px;
+    background-color: #0044cc;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.create-room-link:hover {
+    background-color: #003399;
+}
+
+/* Animação de revelação */
+.reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
