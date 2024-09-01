@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="C:\Users\T-Gamer\Desktop\Programação\Projeto integrador\static\CSS\style.css">
+    <script src="C:\Users\T-Gamer\Desktop\Programação\Projeto integrador\static\JS\room.js" defer></script>
+    <title>Sala - The Book Club</title>
+</head>
+<body>
+    <header>
+        <h1>The Book Club</h1>
+    </header>
+    <div class="room-container">
+        <h2>{{ sala.nome }}</h2>
+        <form method="POST">
+            <div class="book-list">
+                <h3>Livros Disponíveis</h3>
+                {% for livro in livros %}
+                    <div class="book-item">
+                        <div class="book-image">
+                            <img src="{{ url_for('static', filename='images/' ~ livro.imagem) }}" alt="{{ livro.titulo }}">
+                        </div>
+                        <div class="book-details">
+                            <h4>{{ livro.titulo }}</h4>
+                            <p>Autor: {{ livro.autor }}</p>
+                            <p>Gênero: {{ livro.genero }}</p>
+                            <p>Páginas: {{ livro.quantidade_paginas }}</p>
+                        </div>
+                        <button type="submit" name="livro_id" value="{{ livro.id }}">Escolher Livro</button>
+                    </div>
+                {% endfor %}
+            </div>
+            <input type="date" name="data_encontro" required>
+            <button type="submit">Agendar Encontro</button>
+        </form>
+    </div>
+</body>
+</html>
