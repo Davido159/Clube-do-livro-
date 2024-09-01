@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="C:/Users/T-Gamer/Desktop/Programação/Projeto integrador/static/CSS/style.css">
-        <link rel="stylesheet" href="C:/Users/T-Gamer/Desktop/Programação/Projeto integrador/static/CSS/home.css">
-        <script src="C:/Users/T-Gamer/Desktop/Programação/Projeto integrador/static/JS/home.js" defer></script>
-        <title>Página Inicial - The Book Club</title>
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/home.css') }}">
+    <script src="{{ url_for('static', filename='JS/home.js') }}" defer></script>
+    <title>Página Inicial - The Book Club</title>
+</head>
 <body>
     <header>
         <h1>The Book Club</h1>
@@ -20,14 +20,14 @@
             <h3>Minhas Salas</h3>
             <ul>
                 {% for sala in salas %}
-                <li><a href="{{ url_for('room', sala_id=sala['id']) }}" class="room-link">{{ sala['nome'] }}</a></li>
+                <li><a href="{{ url_for('room', sala_id=sala['id']) }}">{{ sala['nome'] }}</a></li>
                 {% endfor %}
             </ul>
             <a href="{{ url_for('create_room') }}" class="create-room-link">Criar uma Sala</a>
         </section>
 
         <!-- Seção de Acervo de Livros -->
-        <section class="books-section reveal">
+        <section class="books-section reveal hidden">
             <h3>Acervo de Livros</h3>
             <ul>
                 {% for livro in livros %}
@@ -53,3 +53,4 @@
     </div>
 </body>
 </html>
+
