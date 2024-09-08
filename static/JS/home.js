@@ -1,7 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
     const bookItems = document.querySelectorAll('.book-item');
-    const roomsSection = document.querySelector('.rooms-section');
-    const booksSection = document.querySelector('.books-section');
+    const toggleButton = document.getElementById('toggle-books');
+    const booksContent = document.getElementById('books-content');
+    const revealElements = document.querySelectorAll('.reveal');
 
     // Adicionar efeitos de destaque e escala aos itens da lista de livros
     bookItems.forEach(item => {
@@ -17,7 +18,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // Scroll para revelar seções
     const revealOnScroll = () => {
         const windowHeight = window.innerHeight;
-        const revealElements = document.querySelectorAll('.reveal');
 
         revealElements.forEach(element => {
             const elementTop = element.getBoundingClientRect().top;
@@ -30,19 +30,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     window.addEventListener('scroll', revealOnScroll);
     revealOnScroll(); // Para mostrar os elementos ao carregar a página
-});
 
-document.addEventListener('DOMContentLoaded', () => {
-    const revealElements = document.querySelectorAll('.reveal');
-
-    revealElements.forEach(element => {
-        element.classList.add('visible');
-    });
-});
-document.addEventListener('DOMContentLoaded', () => {
-    const toggleButton = document.getElementById('toggle-books');
-    const booksContent = document.getElementById('books-content');
-
+    // Toggle de visibilidade do acervo de livros
     toggleButton.addEventListener('click', () => {
         if (booksContent.classList.contains('hidden')) {
             booksContent.classList.remove('hidden');
@@ -53,5 +42,10 @@ document.addEventListener('DOMContentLoaded', () => {
             booksContent.classList.add('hidden');
             toggleButton.textContent = 'Mostrar Acervo de Livros';
         }
+    });
+
+    // Adicionar visibilidade aos elementos com a classe 'reveal'
+    revealElements.forEach(element => {
+        element.classList.add('visible');
     });
 });
