@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Administração</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Painel de Administração</h1>
+        <nav>
+            <a href="{{ url_for('home') }}">Início</a>
+            <a href="{{ url_for('logout') }}">Sair</a>
+        </nav>
+    </header>
+    <main>
+        <h2>Bem-vindo, Administrador!</h2>
+        <!-- Aqui você pode adicionar links e formulários para gerenciar o site -->
+        <section>
+            <h3>Gerenciar Usuários</h3>
+            <!-- Lista de usuários, etc. -->
+        </section>
+        <section>
+            <h3>Gerenciar Livros</h3>
+            <!-- Lista de livros, etc. -->
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Seu Site</p>
+    </footer>
+</body>
+</html>
