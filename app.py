@@ -1,18 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from werkzeug.security import generate_password_hash, check_password_hash
-import mysql.connector
+from db_utils import connect_db  # Importando a função de conexão ao banco de dados
 from config import DB_HOST, DB_USER, DB_PASSWORD, DB_NAME
 
 app = Flask(__name__)
-app.secret_key = 'sua_chave_secreta_aqui'
-
-def connect_db():
-    return mysql.connector.connect(
-        host=DB_HOST,
-        user=DB_USER,
-        password=DB_PASSWORD,
-        database=DB_NAME
-    )
+app.secret_key = 'G7x!R9e@#qZk4tB%aL2$Wv8*HnFz3uJ'  # Substitua por uma chave secreta real
 
 @app.route('/')
 def index():
@@ -25,7 +17,7 @@ def login():
         senha = request.form['senha']
         db = connect_db()
         cursor = db.cursor(dictionary=True)
-        
+
         cursor.execute("SELECT * FROM usuarios WHERE email = %s", (email,))
         user = cursor.fetchone()
         cursor.close()
@@ -73,7 +65,7 @@ def register():
         db.commit()
         cursor.close()
         db.close()
-        
+
         flash('Cadastro realizado com sucesso!', 'success')
         return redirect(url_for('login'))
 
@@ -83,10 +75,10 @@ def register():
 def home():
     if 'user_id' not in session:
         return redirect(url_for('login'))
-    
+
     db = connect_db()
     cursor = db.cursor(dictionary=True)
-    
+
     # Buscar salas do usuário
     cursor.execute("""
         SELECT salas.id, salas.nome FROM salas
@@ -94,7 +86,7 @@ def home():
         WHERE usuarios.id = %s
     """, (session['user_id'],))
     salas = cursor.fetchall()
-    
+
     # Buscar acervo de livros
     cursor.execute("SELECT * FROM livros")
     livros = cursor.fetchall()
@@ -124,8 +116,8 @@ def create_room():
         if sala_existente:
             cursor.close()
             db.close()
-            flash("Este nome de sala já foi escolhido. Escolha outro nome.")
-            return render_template('create_room.html', error="Este nome de sala já foi escolhido. Escolha outro nome.")
+            flash("Este nome de sala já foi escolhido. Escolha outro nome.", 'error')
+            return redirect(url_for('create_room'))
 
         # Inserir nova sala
         cursor.execute(
@@ -136,6 +128,7 @@ def create_room():
         cursor.close()
         db.close()
 
+        flash('Sala criada com sucesso!', 'success')
         return redirect(url_for('home'))
 
     return render_template('create_room.html')
@@ -144,10 +137,10 @@ def create_room():
 def room(sala_id):
     if 'user_id' not in session:
         return redirect(url_for('login'))
-    
+
     db = connect_db()
     cursor = db.cursor(dictionary=True)
-    
+
     # Buscar detalhes da sala
     cursor.execute("SELECT * FROM salas WHERE id = %s", (sala_id,))
     sala = cursor.fetchone()
@@ -168,7 +161,18 @@ def room(sala_id):
     if request.method == 'POST':
         livro_id = request.form.get('livro_id')
         data_encontro = request.form.get('data_encontro')
-        # Lógica para escolher livro e data de encontro...
+
+        # Lógica para escolher livro e data de encontro
+        cursor.execute(
+            "INSERT INTO sala_livros (sala_id, livro_id, data_encontro) VALUES (%s, %s, %s)",
+            (sala_id, livro_id, data_encontro)
+        )
+        db.commit()
+        cursor.close()
+        db.close()
+
+        flash('Encontro agendado com sucesso!', 'success')
+        return redirect(url_for('room', sala_id=sala_id))
 
     cursor.close()
     db.close()
@@ -178,6 +182,7 @@ def room(sala_id):
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
+    flash('Você foi desconectado.', 'info')
     return redirect(url_for('login'))
 
 if __name__ == "__main__":
