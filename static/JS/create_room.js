@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const senhaSalaInput = form.querySelector('input[name="senha_sala"]');
     const errorElement = document.querySelector('#error-message');
     
-    // Validação em tempo real para o nome da sala
     nomeSalaInput.addEventListener('input', function () {
         const nomeSala = nomeSalaInput.value.trim();
         
@@ -22,6 +21,13 @@ document.addEventListener('DOMContentLoaded', function () {
         if (nomeSala.length === 0) {
             alert('O nome da sala é obrigatório.');
             event.preventDefault();
+        }
+
+        // Adicione a validação de senha aqui, se necessário
+        if (senhaSala.length === 0) {
+            // Caso a senha seja obrigatória
+            // alert('Senha obrigatória.');
+            // event.preventDefault();
         }
     });
 });
