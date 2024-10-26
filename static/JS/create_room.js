@@ -3,12 +3,22 @@ document.addEventListener('DOMContentLoaded', function () {
     const nomeSalaInput = form.querySelector('input[name="nome_sala"]');
     const senhaSalaInput = form.querySelector('input[name="senha_sala"]');
     const errorElement = document.querySelector('#error-message');
-    
+
     nomeSalaInput.addEventListener('input', function () {
         const nomeSala = nomeSalaInput.value.trim();
         
         if (nomeSala.length === 0) {
             errorElement.textContent = 'O nome da sala é obrigatório.';
+        } else {
+            errorElement.textContent = '';
+        }
+    });
+
+    senhaSalaInput.addEventListener('input', function () {
+        const senhaSala = senhaSalaInput.value.trim();
+
+        if (senhaSala.length === 0) {
+            errorElement.textContent = 'A senha da sala é obrigatória.';
         } else {
             errorElement.textContent = '';
         }
@@ -23,11 +33,11 @@ document.addEventListener('DOMContentLoaded', function () {
             event.preventDefault();
         }
 
-        // Adicione a validação de senha aqui, se necessário
         if (senhaSala.length === 0) {
-            // Caso a senha seja obrigatória
-            // alert('Senha obrigatória.');
-            // event.preventDefault();
+            alert('Senha obrigatória.');
+            event.preventDefault();
         }
     });
 });
+
+    
