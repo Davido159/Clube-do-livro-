@@ -64,7 +64,7 @@ h3 {
     border-radius: 5px;
     color: #333;
     text-decoration: none;
-    font-size: 1.1rem; /* Ajusta o tamanho da fonte */
+    font-size: 1.1rem; /* Ajusta o tamanho da fonte da pagina*/
     overflow: hidden; /* Garante que o texto não ultrapasse o contêiner */
     text-overflow: ellipsis; /* Adiciona "..." se o texto for muito longo */
     white-space: nowrap; /* Impede que o texto quebre em várias linhas */
