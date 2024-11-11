@@ -1,7 +1,7 @@
 CREATE DATABASE IF NOT EXISTS clube_do_livro;
-
 USE clube_do_livro;
 
+-- Criação das tabelas
 CREATE TABLE IF NOT EXISTS usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,
@@ -46,3 +46,4 @@ CREATE TABLE IF NOT EXISTS votos (
     FOREIGN KEY (livro_id) REFERENCES livros(id),
     FOREIGN KEY (sala_id) REFERENCES salas(id)
 );
+
