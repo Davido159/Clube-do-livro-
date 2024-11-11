@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-from werkzeug.security import generate_password_hash, check_password_hash
-from db_utils import connect_db  # Importando a função de conexão ao banco de dados
+from werkzeug.security import check_password_hash, generate_password_hash  # Para gerar e verificar hash de senha
+from db_utils import connect_db  # Função de conexão com o banco de dados
 from config import DB_HOST, DB_USER, DB_PASSWORD, DB_NAME
 
 app = Flask(__name__)
@@ -15,19 +15,25 @@ def login():
     if request.method == 'POST':
         email = request.form['email']
         senha = request.form['senha']
-        db = connect_db()
-        cursor = db.cursor(dictionary=True)
+        try:
+            db = connect_db()  # Conexão com o banco de dados
+            cursor = db.cursor()
 
-        cursor.execute("SELECT * FROM usuarios WHERE email = %s", (email,))
-        user = cursor.fetchone()
-        cursor.close()
-        db.close()
+            cursor.execute("SELECT * FROM usuarios WHERE email = %s", (email,))
+            user = cursor.fetchone()  # Resultado como dicionário
 
-        if user and check_password_hash(user['senha'], senha):
-            session['user_id'] = user['id']
-            return redirect(url_for('home'))
-        else:
-            flash('Usuário ou senha incorretos.', 'error')
+            cursor.close()
+            db.close()
+
+            # Verificação do hash da senha
+            if user and check_password_hash(user['senha'], senha):  # Comparação do hash com a senha informada
+                session['user_id'] = user['id']
+                return redirect(url_for('home'))
+            else:
+                flash('Usuário ou senha incorretos.', 'error')
+                return redirect(url_for('login'))
+        except Exception as e:
+            flash(f"Erro no login: {e}", "error")
             return redirect(url_for('login'))
 
     return render_template('login.html')
@@ -41,33 +47,34 @@ def register():
         nome_completo = request.form['nome_completo']
         data_nascimento = request.form['data_nascimento']
 
-        db = connect_db()
-        cursor = db.cursor(dictionary=True)
+        try:
+            db = connect_db()
+            cursor = db.cursor()
 
-        # Verificar se o email já existe
-        cursor.execute("SELECT * FROM usuarios WHERE email = %s", (email,))
-        usuario_existente = cursor.fetchone()
+            cursor.execute("SELECT * FROM usuarios WHERE email = %s", (email,))
+            usuario_existente = cursor.fetchone()
 
-        if usuario_existente:
-            flash('E-mail já utilizado, escolha outro.', 'error')
+            if usuario_existente:
+                flash('E-mail já utilizado, escolha outro.', 'error')
+                cursor.close()
+                db.close()
+                return redirect(url_for('register'))
+
+            senha_hash = generate_password_hash(senha)  # Gerar o hash da senha
+
+            cursor.execute(
+                "INSERT INTO usuarios (email, senha, usuario, nome_completo, data_nascimento) VALUES (%s, %s, %s, %s, %s)",
+                (email, senha_hash, usuario, nome_completo, data_nascimento)
+            )
+            db.commit()
             cursor.close()
             db.close()
+
+            flash('Cadastro realizado com sucesso!', 'success')
+            return redirect(url_for('login'))
+        except Exception as e:
+            flash(f"Erro no cadastro: {e}", "error")
             return redirect(url_for('register'))
-
-        # Hash da senha
-        senha_hash = generate_password_hash(senha, method='sha256')
-
-        # Inserir novo usuário no banco de dados
-        cursor.execute(
-            "INSERT INTO usuarios (email, senha, usuario, nome_completo, data_nascimento) VALUES (%s, %s, %s, %s, %s)",
-            (email, senha_hash, usuario, nome_completo, data_nascimento)
-        )
-        db.commit()
-        cursor.close()
-        db.close()
-
-        flash('Cadastro realizado com sucesso!', 'success')
-        return redirect(url_for('login'))
 
     return render_template('register.html')
 
@@ -76,25 +83,27 @@ def home():
     if 'user_id' not in session:
         return redirect(url_for('login'))
 
-    db = connect_db()
-    cursor = db.cursor(dictionary=True)
+    try:
+        db = connect_db()
+        cursor = db.cursor()
 
-    # Buscar salas do usuário
-    cursor.execute("""
-        SELECT salas.id, salas.nome FROM salas
-        JOIN usuarios ON salas.criador_id = usuarios.id
-        WHERE usuarios.id = %s
-    """, (session['user_id'],))
-    salas = cursor.fetchall()
+        cursor.execute("""
+            SELECT salas.id, salas.nome FROM salas
+            JOIN usuarios ON salas.criador_id = usuarios.id
+            WHERE usuarios.id = %s
+        """, (session['user_id'],))
+        salas = cursor.fetchall()
 
-    # Buscar acervo de livros
-    cursor.execute("SELECT * FROM livros")
-    livros = cursor.fetchall()
+        cursor.execute("SELECT * FROM livros")
+        livros = cursor.fetchall()
 
-    cursor.close()
-    db.close()
+        cursor.close()
+        db.close()
 
-    return render_template('home.html', salas=salas, livros=livros)
+        return render_template('home.html', salas=salas, livros=livros)
+    except Exception as e:
+        flash(f"Erro ao carregar a página inicial: {e}", "error")
+        return redirect(url_for('login'))
 
 @app.route('/create_room', methods=['GET', 'POST'])
 def create_room():
@@ -106,30 +115,32 @@ def create_room():
         senha_sala = request.form['senha_sala']
         user_id = session['user_id']
 
-        db = connect_db()
-        cursor = db.cursor()
+        try:
+            db = connect_db()
+            cursor = db.cursor()
 
-        # Verificar se a sala já existe
-        cursor.execute("SELECT * FROM salas WHERE nome = %s", (nome_sala,))
-        sala_existente = cursor.fetchone()
+            cursor.execute("SELECT * FROM salas WHERE nome = %s", (nome_sala,))
+            sala_existente = cursor.fetchone()
 
-        if sala_existente:
+            if sala_existente:
+                flash("Este nome de sala já foi escolhido. Escolha outro nome.", 'error')
+                cursor.close()
+                db.close()
+                return redirect(url_for('create_room'))
+
+            cursor.execute(
+                "INSERT INTO salas (nome, senha, criador_id) VALUES (%s, %s, %s)",
+                (nome_sala, senha_sala, user_id)
+            )
+            db.commit()
             cursor.close()
             db.close()
-            flash("Este nome de sala já foi escolhido. Escolha outro nome.", 'error')
+
+            flash('Sala criada com sucesso!', 'success')
+            return redirect(url_for('home'))
+        except Exception as e:
+            flash(f"Erro ao criar sala: {e}", "error")
             return redirect(url_for('create_room'))
-
-        # Inserir nova sala
-        cursor.execute(
-            "INSERT INTO salas (nome, senha, criador_id) VALUES (%s, %s, %s)",
-            (nome_sala, senha_sala, user_id)
-        )
-        db.commit()
-        cursor.close()
-        db.close()
-
-        flash('Sala criada com sucesso!', 'success')
-        return redirect(url_for('home'))
 
     return render_template('create_room.html')
 
@@ -138,46 +149,43 @@ def room(sala_id):
     if 'user_id' not in session:
         return redirect(url_for('login'))
 
-    db = connect_db()
-    cursor = db.cursor(dictionary=True)
+    try:
+        db = connect_db()
+        cursor = db.cursor()
 
-    # Buscar detalhes da sala
-    cursor.execute("SELECT * FROM salas WHERE id = %s", (sala_id,))
-    sala = cursor.fetchone()
+        cursor.execute("SELECT * FROM salas WHERE id = %s", (sala_id,))
+        sala = cursor.fetchone()
 
-    if not sala:
+        if not sala:
+            return "Sala não encontrada.", 404
+
+        cursor.execute("""
+            SELECT * FROM sala_livros WHERE sala_id = %s AND EXISTS (
+                SELECT * FROM usuarios WHERE id = %s
+            )
+        """, (sala_id, session['user_id']))
+        sala_usuario = cursor.fetchone()
+
+        if request.method == 'POST':
+            livro_id = request.form.get('livro_id')
+            data_encontro = request.form.get('data_encontro')
+
+            cursor.execute(
+                "INSERT INTO sala_livros (sala_id, livro_id, data_encontro) VALUES (%s, %s, %s)",
+                (sala_id, livro_id, data_encontro)
+            )
+            db.commit()
+
+            flash('Encontro agendado com sucesso!', 'success')
+            return redirect(url_for('room', sala_id=sala_id))
+
         cursor.close()
         db.close()
-        return "Sala não encontrada.", 404
 
-    # Verificar se o usuário já está na sala
-    cursor.execute("""
-        SELECT * FROM sala_livros WHERE sala_id = %s AND EXISTS (
-            SELECT * FROM usuarios WHERE id = %s
-        )
-    """, (sala_id, session['user_id']))
-    sala_usuario = cursor.fetchone()
-
-    if request.method == 'POST':
-        livro_id = request.form.get('livro_id')
-        data_encontro = request.form.get('data_encontro')
-
-        # Lógica para escolher livro e data de encontro
-        cursor.execute(
-            "INSERT INTO sala_livros (sala_id, livro_id, data_encontro) VALUES (%s, %s, %s)",
-            (sala_id, livro_id, data_encontro)
-        )
-        db.commit()
-        cursor.close()
-        db.close()
-
-        flash('Encontro agendado com sucesso!', 'success')
-        return redirect(url_for('room', sala_id=sala_id))
-
-    cursor.close()
-    db.close()
-
-    return render_template('room.html', sala=sala)
+        return render_template('room.html', sala=sala)
+    except Exception as e:
+        flash(f"Erro ao carregar a sala: {e}", "error")
+        return redirect(url_for('home'))
 
 @app.route('/logout')
 def logout():
