@@ -27,33 +27,20 @@ h2 {
     margin-bottom: 20px;
 }
 
-.book-item {
+.scheduled-meetings ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.scheduled-meetings li {
     display: flex;
-    align-items: flex-start;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 10px;
-}
-
-.book-image img {
-    width: 100px;
-    height: 150px;
-    object-fit: cover;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
     border-radius: 5px;
-}
-
-.book-details {
-    margin-left: 20px;
-}
-
-.book-details h4 {
-    color: #222;
-    margin: 5px 0;
-}
-
-.book-details p {
-    color: #555;
-    margin: 5px 0;
 }
 
 button {
@@ -68,4 +55,22 @@ button {
 
 button:hover {
     background-color: #003399;
+}
+
+.delete-button {
+    background-color: #cc0000;
+    color: #fff;
+    font-weight: bold;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
+.delete-button:hover {
+    background-color: #990000;
 }
