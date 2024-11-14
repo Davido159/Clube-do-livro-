@@ -5,50 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='CSS/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='CSS/home.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/accessibility.css') }}">
     <script src="{{ url_for('static', filename='JS/home.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='JS/accessibility.js') }}" defer></script>
     <title>Página Inicial - The Book Club</title>
 </head>
 <body>
     <header>
         <h1>The Book Club</h1>
+        <nav>
+            <a href="{{ url_for('home') }}">Minhas Salas</a>
+            <a href="{{ url_for('create_room') }}">Criar Nova Sala</a>
+            <a href="{{ url_for('logout') }}">Sair</a>
+        </nav>
     </header>
-    <div class="container">
-        <h2>Bem-vindo ao Clube do Livro!</h2>
 
-        <!-- Seção de Salas -->
-        <section class="rooms-section reveal">
-            <h3>Minhas Salas</h3>
-            <ul>
+    <div class="container">
+        <section class="rooms-section">
+            <h2>Minhas Salas</h2>
+            <div class="rooms-list">
                 {% for sala in salas %}
-                <li><a href="{{ url_for('room', sala_id=sala['id']) }}">{{ sala['nome'] }}</a></li>
+                <div class="room-card">
+                    <a href="{{ url_for('room', sala_id=sala.id) }}" class="room-link">
+                        <div class="room-info">
+                            <h3>{{ sala.nome }}</h3>
+                            <p>Criada por: {{ sala.criador_nome }}</p>
+                        </div>
+                    </a>
+                </div>
+                {% else %}
+                <p>Você ainda não tem salas. <a href="{{ url_for('create_room') }}">Crie uma nova sala</a>.</p>
                 {% endfor %}
-            </ul>
-            <a href="{{ url_for('create_room') }}" class="create-room-link">Criar uma Sala</a>
+            </div>
         </section>
 
-        <!-- Seção de Acervo de Livros -->
-        <section class="books-section reveal hidden">
-            <h3>Acervo de Livros</h3>
-            <ul>
-                {% for livro in livros %}
-                <li class="book-item">
-                    <div class="book-image">
-                        {% if livro['capa'] %}
-                        <img src="{{ url_for('static', filename='imagens/' ~ livro['capa']) }}" alt="Capa do Livro">
-                        {% else %}
-                        <img src="{{ url_for('static', filename='imagens/default.jpg') }}" alt="Capa do Livro">
-                        {% endif %}
-                    </div>
-                    <div class="book-details">
-                        <h4>{{ livro['titulo'] }}</h4>
-                        <p>Autor: {{ livro['autor'] }}</p>
-                        <p>Gênero: {{ livro['genero'] }}</p>
-                        <p>Pais de Origem: {{ livro['pais_origem'] }}</p>
-                        <p>Quantidade de Páginas: {{ livro['quantidade_paginas'] }}</p>
-                    </div>
-                </li>
-                {% endfor %}
-            </ul>
+        <section class="books-section">
+            <h2>Acervo de Livros</h2>
+            <button id="toggle-books">Mostrar Acervo de Livros</button>
+            <div id="books-content" class="hidden">
+                <ul>
+                    {% for livro in livros %}
+                    <li class="book-item reveal">
+                        <div class="book-image">
+                            <img src="{{ livro.capa }}" alt="{{ livro.titulo }}">
+                        </div>
+                        <div class="book-details">
+                            <h4>{{ livro.titulo }}</h4>
+                            <p>{{ livro.autor }}</p>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
         </section>
     </div>
 </body>
