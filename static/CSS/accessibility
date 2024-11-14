@@ -1,0 +1,43 @@
+/* Modo de alto contraste */
+.high-contrast {
+    background-color: #000;
+    color: #fff;
+}
+
+.high-contrast a {
+    color: #ff0;
+}
+
+.high-contrast button {
+    background-color: #000;
+    color: #fff;
+    border: 2px solid #ff0;
+}
+
+.high-contrast input, .high-contrast select, .high-contrast textarea {
+    background-color: #222;
+    color: #fff;
+    border: 1px solid #ff0;
+}
+
+.high-contrast .container {
+    background-color: #333;
+    color: #fff;
+}
+
+#contrast-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #ff0;
+    color: #000;
+    padding: 10px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#contrast-toggle:hover {
+    background-color: #fff;
+    color: #000;
+}
