@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel de Administração</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/accessibility.css') }}">
 </head>
 <body>
+    {% block content %}
     <header>
         <h1>Painel de Administração</h1>
         <nav>
@@ -16,18 +18,19 @@
     </header>
     <main>
         <h2>Bem-vindo, Administrador!</h2>
-        <!-- adicionar links e formulários para gerenciar o site -->
         <section>
             <h3>Gerenciar Usuários</h3>
-            <!-- Lista de usuários,-->
+            <!-- Lista de usuários -->
         </section>
         <section>
             <h3>Gerenciar Livros</h3>
-            <!-- Lista de livros, -->
+            <!-- Lista de livros -->
         </section>
     </main>
     <footer>
         <p>&copy; 2024 Seu Site</p>
     </footer>
+    {% endblock %}
+    <script src="{{ url_for('static', filename='JS/accessibility.js') }}" defer></script>
 </body>
 </html>
