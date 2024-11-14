@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='CSS/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='CSS/register.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/accessibility.css') }}">
     <script src="{{ url_for('static', filename='JS/register.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='JS/accessibility.js') }}" defer></script>
     <title>Registro - The Book Club</title>
 </head>
 <body>
@@ -21,13 +23,6 @@
             <input type="password" name="senha" placeholder="Senha" required>
             <input type="date" name="data_nascimento" placeholder="Data de Nascimento" required>
             <button type="submit">Cadastrar</button>
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <p class="error">{{ message }}</p>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
         </form>
     </div>
 </body>
