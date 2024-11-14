@@ -1,7 +1,7 @@
 CREATE DATABASE IF NOT EXISTS clube_do_livro;
 USE clube_do_livro;
 
--- Criação das tabelas
+-- Tabela de usuários
 CREATE TABLE IF NOT EXISTS usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,
@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
     data_nascimento DATE
 );
 
+-- Tabela de salas
 CREATE TABLE IF NOT EXISTS salas (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(255) NOT NULL UNIQUE,
@@ -19,15 +20,16 @@ CREATE TABLE IF NOT EXISTS salas (
     FOREIGN KEY (criador_id) REFERENCES usuarios(id)
 );
 
+-- Tabela de livros
 CREATE TABLE IF NOT EXISTS livros (
     id INT AUTO_INCREMENT PRIMARY KEY,
     titulo VARCHAR(255) NOT NULL,
     autor VARCHAR(255),
     genero VARCHAR(255),
-    pais_origem VARCHAR(255),
-    quantidade_paginas INT
+    capa_url VARCHAR(255) -- Adicionando coluna para URL da capa do livro
 );
 
+-- Tabela de associação entre salas e livros
 CREATE TABLE IF NOT EXISTS sala_livros (
     id INT AUTO_INCREMENT PRIMARY KEY,
     sala_id INT,
@@ -37,6 +39,7 @@ CREATE TABLE IF NOT EXISTS sala_livros (
     FOREIGN KEY (livro_id) REFERENCES livros(id)
 );
 
+-- Tabela de votos dos usuários nos livros
 CREATE TABLE IF NOT EXISTS votos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT,
@@ -46,4 +49,3 @@ CREATE TABLE IF NOT EXISTS votos (
     FOREIGN KEY (livro_id) REFERENCES livros(id),
     FOREIGN KEY (sala_id) REFERENCES salas(id)
 );
-
