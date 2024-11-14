@@ -1,0 +1,27 @@
+document.addEventListener('DOMContentLoaded', () => {
+    const contrastButton = document.createElement('button');
+    contrastButton.textContent = 'Ativar Alto Contraste';
+    contrastButton.id = 'contrast-toggle';
+    document.body.appendChild(contrastButton);
+
+    // Verifica se o modo de alto contraste já está ativado
+    const isHighContrast = localStorage.getItem('highContrast') === 'true';
+    if (isHighContrast) {
+        document.body.classList.add('high-contrast');
+        contrastButton.textContent = 'Desativar Alto Contraste';
+    }
+
+    // Alterna entre o modo normal e o de alto contraste
+    contrastButton.addEventListener('click', () => {
+        const isCurrentlyHighContrast = document.body.classList.contains('high-contrast');
+        if (isCurrentlyHighContrast) {
+            document.body.classList.remove('high-contrast');
+            contrastButton.textContent = 'Ativar Alto Contraste';
+            localStorage.setItem('highContrast', 'false');
+        } else {
+            document.body.classList.add('high-contrast');
+            contrastButton.textContent = 'Desativar Alto Contraste';
+            localStorage.setItem('highContrast', 'true');
+        }
+    });
+});
